@@ -40,7 +40,10 @@ class NotifyListViewController: UITableViewController {
         return self.notifys!.count
     }
 
-    
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
+    {
+        return 43
+    }
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as NotifyCell
 
@@ -50,8 +53,16 @@ class NotifyListViewController: UITableViewController {
             let date=notify.fireDate
             cell.time.text=GetDateString(date!)
             if let rows = self.db?.query("select title,file,time from voice_log where id=?", parameters: [id!]){
-                let row = rows[0]
-                cell.title.text=row["title"]?.asString()
+                if rows.count==1 {
+                    let row = rows[0]
+                    cell.title.text=row["title"]?.asString()
+                    cell.title.textColor=UIColor.blackColor()
+                }
+                else
+                {
+                    cell.title.text="File Deleted"
+                    cell.title.textColor=UIColor.redColor()
+                }
             }
         }
         return cell

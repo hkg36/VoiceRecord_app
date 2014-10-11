@@ -8,7 +8,7 @@
         <!--Records-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="test_swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="VoiceLog" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -73,7 +73,7 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="jwH-Sz-Qta">
                                 <rect key="frame" x="0.0" y="64" width="600" height="410"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="base" rowHeight="46" id="DAL-fl-BLx" customClass="RecordCell" customModule="test_swift" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="base" rowHeight="46" id="DAL-fl-BLx" customClass="RecordCell" customModule="VoiceLog" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="DAL-fl-BLx" id="TFn-Mb-36t">
@@ -159,7 +159,7 @@
                         <viewControllerLayoutGuide type="top" id="WTS-hT-OJu"/>
                         <viewControllerLayoutGuide type="bottom" id="41S-oo-7rG"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="bP5-SL-JHn" customClass="DatePickerShowup" customModule="test_swift" customModuleProvider="target">
+                    <view key="view" contentMode="scaleToFill" id="bP5-SL-JHn" customClass="DatePickerShowup" customModule="VoiceLog" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -220,13 +220,13 @@
         <!--Notifys-->
         <scene sceneID="SwU-eK-9Wk">
             <objects>
-                <tableViewController storyboardIdentifier="NotifyList" id="HwC-m9-LNv" customClass="NotifyListViewController" customModule="test_swift" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="NotifyList" id="HwC-m9-LNv" customClass="NotifyListViewController" customModule="VoiceLog" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Thv-VD-gqj">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="FxX-Ra-gJj" customClass="NotifyCell" customModule="test_swift" customModuleProvider="target">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="FxX-Ra-gJj" customClass="NotifyCell" customModule="VoiceLog" customModuleProvider="target">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="FxX-Ra-gJj" id="DeH-U7-ZpB">
                                     <autoresizingMask key="autoresizingMask"/>
@@ -280,19 +280,13 @@
                         <viewControllerLayoutGuide type="top" id="O0p-fG-bh0"/>
                         <viewControllerLayoutGuide type="bottom" id="CTV-ZP-mP5"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="cD1-Jd-NpY" customClass="AlertPlayView" customModule="test_swift" customModuleProvider="target">
+                    <view key="view" contentMode="scaleToFill" id="cD1-Jd-NpY" customClass="AlertPlayView" customModule="VoiceLog" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view tag="1" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XX4-8Q-Ip4">
                                 <rect key="frame" x="140" y="140" width="320" height="320"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Dc-2Z-dsi">
-                                        <rect key="frame" x="182" y="143" width="130" height="21"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.60000002379999995" green="0.40000000600000002" blue="0.20000000300000001" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KZJ-8R-SRR">
                                         <rect key="frame" x="14" y="192" width="120" height="120"/>
                                         <state key="normal" image="playico">
@@ -317,6 +311,12 @@
                                             <action selector="closeView:" destination="cD1-Jd-NpY" eventType="touchUpInside" id="nUa-PZ-fZ3"/>
                                         </connections>
                                     </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Dc-2Z-dsi">
+                                        <rect key="frame" x="182" y="143" width="130" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.60000002379999995" green="0.40000000600000002" blue="0.20000000300000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             </view>

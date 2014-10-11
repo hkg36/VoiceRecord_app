@@ -44,7 +44,10 @@ class AlertPlayView: UIView {
     {
         let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
         let db=appDelegate.db
-        let rows = db?.query("select title,file,time from voice_log where id=?", parameters: [id as NSNumber])
+        let rows = db?.query("select title,file,time from voice_log where id=?", parameters: [id])
+        if rows?.count == 0 {
+            return
+        }
         let row=rows?[0]
         
         let avSession = AVAudioSession.sharedInstance()

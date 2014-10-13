@@ -60,7 +60,7 @@ class NotifyListViewController: UITableViewController {
                 }
                 else
                 {
-                    cell.title.text="File Deleted"
+                    cell.title.text="Voice Deleted"
                     cell.title.textColor=UIColor.redColor()
                 }
             }

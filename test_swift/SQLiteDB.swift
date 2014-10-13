@@ -177,24 +177,6 @@ let SQLITE_DATE = SQLITE_NULL + 1
  
 	private func closeDatabase() {
 		if db != nil {
-			// Get launch count value
-			let ud = NSUserDefaults.standardUserDefaults()
-			var launchCount = ud.integerForKey("LaunchCount")
-			launchCount--
-			println("SQLiteDB - Launch count \(launchCount)")
-			var clean = false
-			if launchCount < 0 {
-				clean = true
-				launchCount = 500
-			}
-			ud.setInteger(launchCount, forKey: "LaunchCount")
-			ud.synchronize()
-			// Do we clean DB?
-			if !clean {
-				sqlite3_close(db)
-				return
-			}
-			// Clean DB
 			println("SQLiteDB - Optimize DB")
 			let sql = "VACUUM; ANALYZE"
 			if execute(sql) != SQLITE_OK {

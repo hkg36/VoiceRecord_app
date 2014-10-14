@@ -11,12 +11,9 @@ import UIKit
 class NotifyListViewController: UITableViewController {
 
     var notifys:[UILocalNotification]?
-    var db:SQLiteDB?
     var timeformat=NSDateFormatter()
     override func viewDidLoad() {
         super.viewDidLoad()
-        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
-        self.db=appDelegate.db
         self.notifys = UIApplication.sharedApplication().scheduledLocalNotifications as? [UILocalNotification]
         self.timeformat.dateFormat="MM/dd/yy H:mm"
     }
@@ -52,17 +49,16 @@ class NotifyListViewController: UITableViewController {
             let id=notify.userInfo?["id"] as AnyObject? as Int?
             let date=notify.fireDate
             cell.time.text=GetDateString(date!)
-            if let rows = self.db?.query("select title,file,time from voice_log where id=?", parameters: [id!]){
-                if rows.count==1 {
-                    let row = rows[0]
-                    cell.title.text=row["title"]?.asString()
-                    cell.title.textColor=UIColor.blackColor()
-                }
-                else
-                {
-                    cell.title.text="Voice Deleted"
-                    cell.title.textColor=UIColor.redColor()
-                }
+            let rows = SQLiteDB.instanse.query("select title,file,time from voice_log where id=?", parameters: [id!])
+            if rows.count==1 {
+                let row = rows[0]
+                cell.title.text=row["title"]?.asString()
+                cell.title.textColor=UIColor.blackColor()
+            }
+            else
+            {
+                cell.title.text="Voice Deleted"
+                cell.title.textColor=UIColor.redColor()
             }
         }
         return cell

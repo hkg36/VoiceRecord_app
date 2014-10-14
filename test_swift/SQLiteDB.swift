@@ -152,7 +152,19 @@ let SQLITE_DATE = SQLITE_NULL + 1
 	var db:COpaquePointer = nil
 	var queue:dispatch_queue_t
 	var fmt = NSDateFormatter()
- 
+    
+    struct Static {
+        static var instance:SQLiteDB? = nil
+        static var token:dispatch_once_t = 0
+    }
+    class var instanse:SQLiteDB{
+        get{
+            dispatch_once(&Static.token) {
+                Static.instance = SQLiteDB(DB_NAME: "test.db")
+            }
+            return Static.instance!
+        }
+    }
     required init(DB_NAME:String) {
 		// Set queue
 		queue = dispatch_queue_create(QUEUE_LABLE, nil)

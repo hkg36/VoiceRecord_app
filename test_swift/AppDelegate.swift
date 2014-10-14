@@ -12,7 +12,6 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var db:SQLiteDB?
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -21,8 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         {
             application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: UIUserNotificationType.Sound | UIUserNotificationType.Alert | UIUserNotificationType.Badge, categories: nil))
         }
-        
-        self.db=SQLiteDB(DB_NAME:"test.db")
         
         if let localNotification:UILocalNotification  = launchOptions?[UIApplicationLaunchOptionsLocalNotificationKey] as?UILocalNotification {
             dispatch_after(1, dispatch_get_main_queue(), {

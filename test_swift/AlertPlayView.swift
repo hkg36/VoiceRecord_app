@@ -42,18 +42,16 @@ class AlertPlayView: UIView {
     }
     class func Show(id:Int)
     {
-        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
-        let db=appDelegate.db
-        let rows = db?.query("select title,file,time from voice_log where id=?", parameters: [id])
-        if rows?.count == 0 {
+        let rows = SQLiteDB.instanse.query("select title,file,time from voice_log where id=?", parameters: [id])
+        if rows.count == 0 {
             return
         }
-        let row=rows?[0]
+        let row=rows[0]
         
         let avSession = AVAudioSession.sharedInstance()
         avSession.setActive(true,error:nil)
         avSession.setCategory(AVAudioSessionCategoryPlayAndRecord, withOptions:AVAudioSessionCategoryOptions.DefaultToSpeaker, error:nil)
-        if let file = row?["file"]?.asString(){
+        if let file = row["file"]?.asString(){
             let docDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
             let soundFileURL = NSURL(string:docDir.stringByAppendingPathComponent(file))
             var error: NSError?
@@ -65,13 +63,13 @@ class AlertPlayView: UIView {
             let storyboard=UIStoryboard(name:"Main", bundle: nil)
             let control=storyboard.instantiateViewControllerWithIdentifier("playWindow") as UIViewController
             let view = control.view as AlertPlayView
-            view.title.text=row?["title"]?.asString()
+            view.title.text=row["title"]?.asString()
             view.player=player
             view.time.text="\(Int(player.duration)/60):\(Int(player.duration)%60)"
             println(view.backgroundColor)
             
             view.alpha=0
-            appDelegate.window?.addSubview(view)
+            (UIApplication.sharedApplication().delegate as AppDelegate).window?.addSubview(view)
             UIView.animateWithDuration(0.5, animations: { () -> Void in
                 view.alpha=1
                 return

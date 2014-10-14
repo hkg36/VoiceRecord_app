@@ -18,7 +18,6 @@ UIAlertViewDelegate{
     var player:AVAudioPlayer?
     var items: [Int?]=[]
     var goSaveItem: RecordInfo?
-    var db:SQLiteDB?
     var timeformat=NSDateFormatter()
     var play_process_timer:NSTimer?
     var recMark:UIImageView?
@@ -27,9 +26,7 @@ UIAlertViewDelegate{
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
-        self.db=appDelegate.db
-        let res = self.db?.execute("CREATE TABLE voice_log (id integer PRIMARY KEY AUTOINCREMENT,title Varchar(128),file Varchar(1024),time Timestamp DEFAULT CURRENT_TIMESTAMP,duration float)", parameters: nil)
+        let res = SQLiteDB.instanse.execute("CREATE TABLE voice_log (id integer PRIMARY KEY AUTOINCREMENT,title Varchar(128),file Varchar(1024),time Timestamp DEFAULT CURRENT_TIMESTAMP,duration float)", parameters: nil)
         
         let docDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
         NSFileManager.defaultManager().createDirectoryAtPath(docDir.stringByAppendingPathComponent("audio"), withIntermediateDirectories: true, attributes: nil, error: nil)
@@ -66,8 +63,8 @@ UIAlertViewDelegate{
         if (self.player?.playing==true){
             self.player?.stop()
         }
-        let rows=self.db?.query("select title,file,time from voice_log where id=?", parameters: [self.items[indexPath.row]!])
-        if let file=rows?[0]["file"]?.asString() {
+        let rows=SQLiteDB.instanse.query("select title,file,time from voice_log where id=?", parameters: [self.items[indexPath.row]!])
+        if let file=rows[0]["file"]?.asString() {
             var error: NSError?
             let docDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
             let soundFileURL = NSURL(string:docDir.stringByAppendingPathComponent(file))
@@ -95,11 +92,9 @@ UIAlertViewDelegate{
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         var idlist:[Int?]=[]
-        if let rows=self.db?.query("select id from voice_log order by id desc")
-        {
-            for row in rows {
-                idlist.append(row["id"]?.asInt())
-            }
+        let rows=SQLiteDB.instanse.query("select id from voice_log order by id desc")
+        for row in rows {
+            idlist.append(row["id"]?.asInt())
         }
         self.items=idlist
         return self.items.count;
@@ -107,13 +102,13 @@ UIAlertViewDelegate{
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
         var cell:RecordCell = self.mainlist.dequeueReusableCellWithIdentifier("base") as RecordCell
-        let rows=self.db?.query("select title,file,time,duration from voice_log where id=?", parameters: [self.items[indexPath.row]!])
-        let row=rows?[0]
-        cell.title.text = row?["title"]?.asString()
-        if let date=row?["time"]?.asDate(){
+        let rows=SQLiteDB.instanse.query("select title,file,time,duration from voice_log where id=?", parameters: [self.items[indexPath.row]!])
+        let row=rows[0]
+        cell.title.text = row["title"]?.asString()
+        if let date=row["time"]?.asDate(){
             cell.time.text = GetDateString(date)
         }
-        if let duration=row?["duration"]?.asDouble(){
+        if let duration=row["duration"]?.asDouble(){
             let time_rep=[String(Int(duration/3600)),String(Int(duration%3600/60)),String(Int(duration%60))]
             cell.durasion.text=":".join(time_rep)
         }
@@ -215,9 +210,9 @@ UIAlertViewDelegate{
                     }
                     self.goSaveItem?.duration=Float(player.duration)
                 }
-                let insertid=self.db?.execute("insert into voice_log(title,file,time,duration) values(?,?,?,?)", parameters:[self.goSaveItem!.title!,self.goSaveItem!.file!,self.goSaveItem!.time!,self.goSaveItem!.duration!])
+                let insertid=SQLiteDB.instanse.execute("insert into voice_log(title,file,time,duration) values(?,?,?,?)", parameters:[self.goSaveItem!.title!,self.goSaveItem!.file!,self.goSaveItem!.time!,self.goSaveItem!.duration!])
                 self.mainlist.beginUpdates()
-                self.items.insert(Int(insertid!), atIndex: 0)
+                self.items.insert(Int(insertid), atIndex: 0)
                 self.mainlist.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Automatic)
                 self.mainlist.endUpdates()
             }))
@@ -275,16 +270,16 @@ UIAlertViewDelegate{
         case .Delete:
             tableView.beginUpdates()
             let deleted=self.items.removeAtIndex(indexPath.row)
-            let rows=self.db?.query("select title,file,time from voice_log where id=?", parameters: [deleted!])
-            let row=rows?[0]
-            if let file=row?["file"]?.asString(){
+            let rows=SQLiteDB.instanse.query("select title,file,time from voice_log where id=?", parameters: [deleted!])
+            let row=rows[0]
+            if let file=row["file"]?.asString(){
                 let docDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
                 var error:NSError?
                 if NSFileManager.defaultManager().removeItemAtPath(docDir.stringByAppendingPathComponent(file), error: &error) == false{
                     println("delete file fail:\(error)")
                 }
             }
-            self.db?.execute("delete from voice_log where id=?", parameters: [deleted!])
+            SQLiteDB.instanse.execute("delete from voice_log where id=?", parameters: [deleted!])
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
             tableView.endUpdates()
         default:
@@ -309,30 +304,27 @@ UIAlertViewDelegate{
             
             let date=calendar.dateFromComponents(comps)
             if let selected=self.mainlist.indexPathForSelectedRow() {
-                if let rows=self.db?.query("select title,file,time from voice_log where id=?", parameters: [self.items[selected.row]!])
-                {
-                    let row=rows[0]
-                    let locnot=UILocalNotification()
-                    locnot.fireDate=date
-                    locnot.timeZone=NSTimeZone.defaultTimeZone()
-                    locnot.alertBody=row["title"]?.asString()
-                    locnot.alertAction="View"
-                    
-                    locnot.soundName="alert.caf"
-                    var uinfo=[NSObject : AnyObject]()
-                    uinfo["id"]=self.items[selected.row]
-                    locnot.userInfo=uinfo
-                    locnot.hasAction=true
-                    UIApplication.sharedApplication().scheduleLocalNotification(locnot)
-                    
-                    let datestring = GetDateString(date!)
-                    let alertctrl=UIAlertController(title: nil, message: "will be alert at \(datestring)", preferredStyle: .Alert)
-                    let okAction=UIAlertAction(title: "OK", style: .Default, handler: { (action) in
-                    })
-                    alertctrl.addAction(okAction)
-                    self.presentViewController(alertctrl, animated: true, completion: {})
-                    
-                }
+                let rows=SQLiteDB.instanse.query("select title,file,time from voice_log where id=?", parameters: [self.items[selected.row]!])
+                let row=rows[0]
+                let locnot=UILocalNotification()
+                locnot.fireDate=date
+                locnot.timeZone=NSTimeZone.defaultTimeZone()
+                locnot.alertBody=row["title"]?.asString()
+                locnot.alertAction="View"
+                
+                locnot.soundName="alert.caf"
+                var uinfo=[NSObject : AnyObject]()
+                uinfo["id"]=self.items[selected.row]
+                locnot.userInfo=uinfo
+                locnot.hasAction=true
+                UIApplication.sharedApplication().scheduleLocalNotification(locnot)
+                
+                let datestring = GetDateString(date!)
+                let alertctrl=UIAlertController(title: nil, message: "will be alert at \(datestring)", preferredStyle: .Alert)
+                let okAction=UIAlertAction(title: "OK", style: .Default, handler: { (action) in
+                })
+                alertctrl.addAction(okAction)
+                self.presentViewController(alertctrl, animated: true, completion: {})
             }
         })
     }

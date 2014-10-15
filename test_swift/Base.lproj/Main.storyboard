@@ -40,15 +40,6 @@
                                             <action selector="useAsAlert:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="5i7-Ds-lhe"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Whw-VV-SXd">
-                                        <rect key="frame" x="348" y="43" width="80" height="80"/>
-                                        <state key="normal" image="notifylist">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="showNotifyList:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="vpS-Ye-IlE"/>
-                                        </connections>
-                                    </button>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="HFl-19-Twr">
                                         <rect key="frame" x="6" y="0.0" width="588" height="31"/>
                                         <connections>
@@ -56,6 +47,15 @@
                                             <action selector="startChangeProcess:" destination="vXZ-lx-hvc" eventType="touchDown" id="LHM-1E-F0K"/>
                                         </connections>
                                     </slider>
+                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Whw-VV-SXd">
+                                        <rect key="frame" x="348" y="43" width="80" height="80"/>
+                                        <state key="normal" image="notifylist">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <segue destination="HwC-m9-LNv" kind="show" id="iWa-SX-TxT"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>

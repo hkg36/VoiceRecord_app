@@ -26,8 +26,6 @@ UIAlertViewDelegate{
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let res = SQLiteDB.instanse.execute("CREATE TABLE voice_log (id integer PRIMARY KEY AUTOINCREMENT,title Varchar(128),file Varchar(1024),time Timestamp DEFAULT CURRENT_TIMESTAMP,duration float)", parameters: nil)
-        
         let docDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
         NSFileManager.defaultManager().createDirectoryAtPath(docDir.stringByAppendingPathComponent("audio"), withIntermediateDirectories: true, attributes: nil, error: nil)
         
@@ -327,11 +325,6 @@ UIAlertViewDelegate{
                 self.presentViewController(alertctrl, animated: true, completion: {})
             }
         })
-    }
-    @IBAction func showNotifyList(sender: AnyObject) {
-        let storyboard=UIStoryboard(name:"Main", bundle: nil)
-        let control=storyboard.instantiateViewControllerWithIdentifier("NotifyList") as NotifyListViewController
-        self.navigationController?.pushViewController(control, animated: true)
     }
 }
 

@@ -165,7 +165,7 @@ let SQLITE_DATE = SQLITE_NULL + 1
             return Static.instance!
         }
     }
-    required init(DB_NAME:String) {
+    required internal init(DB_NAME:String) {
 		// Set queue
 		queue = dispatch_queue_create(QUEUE_LABLE, nil)
 		// Get path to DB in Documents directory

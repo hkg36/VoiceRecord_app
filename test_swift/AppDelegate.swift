@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         {
             application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: UIUserNotificationType.Sound | UIUserNotificationType.Alert | UIUserNotificationType.Badge, categories: nil))
         }
-        
+        SQLiteDB.instanse.execute("CREATE TABLE voice_log (id integer PRIMARY KEY AUTOINCREMENT,title Varchar(128),file Varchar(1024),time Timestamp DEFAULT CURRENT_TIMESTAMP,duration float)", parameters: nil)
         if let localNotification:UILocalNotification  = launchOptions?[UIApplicationLaunchOptionsLocalNotificationKey] as?UILocalNotification {
             dispatch_after(1, dispatch_get_main_queue(), {
                 if let appdel=UIApplication.sharedApplication().delegate as? AppDelegate{

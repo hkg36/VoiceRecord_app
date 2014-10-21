@@ -25,6 +25,8 @@ UIAlertViewDelegate{
     @IBOutlet weak var newNotify: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
+        let longPressRec=UILongPressGestureRecognizer(target: self, action: "mainListLongPress:")
+        mainlist.addGestureRecognizer(longPressRec)
         
         let docDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
         NSFileManager.defaultManager().createDirectoryAtPath(docDir.stringByAppendingPathComponent("audio"), withIntermediateDirectories: true, attributes: nil, error: nil)
@@ -325,6 +327,24 @@ UIAlertViewDelegate{
                 self.presentViewController(alertctrl, animated: true, completion: {})
             }
         })
+    }
+    func mainListLongPress(gestureRecognizer:UILongPressGestureRecognizer)
+    {
+        if gestureRecognizer.state == UIGestureRecognizerState.Began {
+            let point=gestureRecognizer.locationInView(self.mainlist)
+            if let posindexpath=self.mainlist.indexPathForRowAtPoint(point) {
+                let id=self.items[posindexpath.row]
+                let alertctl=UIAlertController(title:nil, message: nil, preferredStyle: .ActionSheet)
+                alertctl.addAction(UIAlertAction(title: "Send by Bluetooth", style: UIAlertActionStyle.Default, handler: { (action:UIAlertAction!) -> Void in
+                    let storyboard=UIStoryboard(name:"Main", bundle: nil)
+                    let control=storyboard.instantiateViewControllerWithIdentifier("BluetoothRecvViewCtrl").view as BluetoothRecvView
+                    control.Show()
+                    return
+                }))
+                alertctl.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler:nil))
+                self.presentViewController(alertctl, animated: true, completion: nil)
+            }
+        }
     }
 }
 

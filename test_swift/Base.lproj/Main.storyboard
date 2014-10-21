@@ -52,9 +52,6 @@
                                         <state key="normal" image="notifylist">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
-                                        <connections>
-                                            <segue destination="HwC-m9-LNv" kind="show" id="iWa-SX-TxT"/>
-                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -138,7 +135,13 @@
                             <constraint firstItem="dE9-iW-pQi" firstAttribute="top" secondItem="jwH-Sz-Qta" secondAttribute="bottom" id="yGe-JV-4v2"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Records" id="VM0-1l-5ES"/>
+                    <navigationItem key="navigationItem" title="Records" id="VM0-1l-5ES">
+                        <barButtonItem key="rightBarButtonItem" image="notifylist" id="xB7-9W-dhb">
+                            <connections>
+                                <segue destination="HwC-m9-LNv" kind="show" id="Yxz-pM-5wI"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="mainlist" destination="jwH-Sz-Qta" id="9jf-DF-5aY"/>
                         <outlet property="newNotify" destination="O3P-Xl-Sif" id="XXc-RA-f2G"/>
@@ -268,7 +271,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Lbg-0U-uR5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="444" y="854"/>
+            <point key="canvasLocation" x="414" y="838"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="vE8-EP-kJd">
@@ -300,6 +303,12 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Dc-2Z-dsi">
+                                        <rect key="frame" x="182" y="143" width="130" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.60000002379999995" green="0.40000000600000002" blue="0.20000000300000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zP5-nx-owb">
                                         <rect key="frame" x="182" y="192" width="120" height="120"/>
                                         <state key="normal" image="closeico">
@@ -309,12 +318,6 @@
                                             <action selector="closeView:" destination="cD1-Jd-NpY" eventType="touchUpInside" id="nUa-PZ-fZ3"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Dc-2Z-dsi">
-                                        <rect key="frame" x="182" y="143" width="130" height="21"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.60000002379999995" green="0.40000000600000002" blue="0.20000000300000001" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
@@ -331,7 +334,61 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TpD-dX-r6E" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1107" y="853"/>
+            <point key="canvasLocation" x="1097" y="833"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="8JM-hb-YKl">
+            <objects>
+                <viewController storyboardIdentifier="BluetoothRecvViewCtrl" id="uQA-u6-BQG" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="AIv-dM-1Z3"/>
+                        <viewControllerLayoutGuide type="bottom" id="ylf-xe-CDV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Nhf-qN-UGq" customClass="BluetoothRecvView" customModule="VoiceLog" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EBe-vM-KQo">
+                                <rect key="frame" x="140" y="140" width="320" height="320"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="If you want to send Voice, just Long Press that Voice in list." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="Awm-JT-6bH">
+                                        <rect key="frame" x="8" y="57" width="304" height="124"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                        <color key="textColor" red="0.062745101749897003" green="0.070588238537311554" blue="0.87058830261230469" alpha="1" colorSpace="deviceRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Receiving Voice" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iys-bq-v8h">
+                                        <rect key="frame" x="8" y="16" width="304" height="33"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Mn-KA-3rn">
+                                        <rect key="frame" x="100" y="200" width="120" height="120"/>
+                                        <state key="normal" image="closeico">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="close:" destination="Nhf-qN-UGq" eventType="touchUpInside" id="Va9-oQ-p79"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="0.79000000000000004" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="centerY" secondItem="EBe-vM-KQo" secondAttribute="centerY" id="K8H-Qx-HI0"/>
+                            <constraint firstAttribute="centerX" secondItem="EBe-vM-KQo" secondAttribute="centerX" id="ZpC-Q5-G0H"/>
+                        </constraints>
+                        <connections>
+                            <outlet property="message" destination="Awm-JT-6bH" id="hXZ-SI-NpE"/>
+                            <outlet property="title" destination="Iys-bq-v8h" id="ONI-14-xNi"/>
+                        </connections>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="O14-2m-aYK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1736" y="833"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="LDK-HD-uVs">
@@ -353,7 +410,7 @@
     <resources>
         <image name="alertpic" width="80" height="80"/>
         <image name="closeico" width="120" height="120"/>
-        <image name="notifylist" width="80" height="80"/>
+        <image name="notifylist" width="20" height="20"/>
         <image name="playico" width="120" height="120"/>
         <image name="recordpic" width="80" height="80"/>
     </resources>

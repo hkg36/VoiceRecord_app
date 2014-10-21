@@ -21,6 +21,7 @@
 		172953B519E5436600E324B1 /* NotifyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172953B419E5436600E324B1 /* NotifyCell.swift */; };
 		173B92A119E64F0500ED41F9 /* alert.caf in Resources */ = {isa = PBXBuildFile; fileRef = 173B92A019E64F0500ED41F9 /* alert.caf */; };
 		1752089219E8F55600F6E510 /* tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1752089119E8F55600F6E510 /* tools.swift */; };
+		1757FA9719F64B4300797378 /* BluetoothRecvViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1757FA9619F64B4300797378 /* BluetoothRecvViewCtrl.swift */; };
 		175AC30A19D182B2009F1187 /* SQLiteDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175AC30819D182B2009F1187 /* SQLiteDB.swift */; };
 		175AC30B19D182B2009F1187 /* String-Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175AC30919D182B2009F1187 /* String-Extras.swift */; };
 		175AC30D19D182D6009F1187 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 175AC30C19D182D6009F1187 /* libsqlite3.dylib */; };
@@ -44,6 +45,7 @@
 		172953B419E5436600E324B1 /* NotifyCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotifyCell.swift; sourceTree = "<group>"; };
 		173B92A019E64F0500ED41F9 /* alert.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = alert.caf; sourceTree = "<group>"; };
 		1752089119E8F55600F6E510 /* tools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tools.swift; sourceTree = "<group>"; };
+		1757FA9619F64B4300797378 /* BluetoothRecvViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BluetoothRecvViewCtrl.swift; sourceTree = "<group>"; };
 		175AC30719D182A6009F1187 /* Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		175AC30819D182B2009F1187 /* SQLiteDB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteDB.swift; sourceTree = "<group>"; };
 		175AC30919D182B2009F1187 /* String-Extras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String-Extras.swift"; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 				172953B419E5436600E324B1 /* NotifyCell.swift */,
 				1720C68D19E7B13600185957 /* AlertPlayView.swift */,
 				1752089119E8F55600F6E510 /* tools.swift */,
+				1757FA9619F64B4300797378 /* BluetoothRecvViewCtrl.swift */,
 			);
 			path = test_swift;
 			sourceTree = "<group>";
@@ -191,6 +194,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1757FA9719F64B4300797378 /* BluetoothRecvViewCtrl.swift in Sources */,
 				172953B519E5436600E324B1 /* NotifyCell.swift in Sources */,
 				171468B219CC33F3005873AB /* ViewController.swift in Sources */,
 				175AC30B19D182B2009F1187 /* String-Extras.swift in Sources */,

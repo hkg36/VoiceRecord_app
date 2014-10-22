@@ -209,7 +209,15 @@ let SQLITE_DATE = SQLITE_NULL + 1
 		}
 		return result
 	}
-	
+    func queryOne(sql:String, parameters:[AnyObject]?=nil)->SQLRow? {
+        let rows=query(sql, parameters: parameters)
+        if rows.count == 0 {
+            return nil
+        }
+        else{
+            return rows[0]
+        }
+    }
 	// Run SQL query with parameters
 	func query(sql:String, parameters:[AnyObject]?=nil)->[SQLRow] {
 		var rows = [SQLRow]()

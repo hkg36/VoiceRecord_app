@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreBluetooth
 
 func GetDateString(date:NSDate) -> String {
     let now=NSDate()
@@ -29,4 +30,9 @@ func GetDateString(date:NSDate) -> String {
     }
     let str=format.stringFromDate(date)
     return format.stringFromDate(date)
+}
+
+struct GlobalStatic{
+    static let characteristicUUID=CBUUID.UUIDWithString("27864ED9-B23A-4C94-8DF5-D7CA4763FF66")
+    static let serviceUUID=CBUUID.UUIDWithString("C7108F26-4F8C-4C44-8DA1-12DEA95F4595")
 }

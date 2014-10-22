@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		17106C1C19D006770069C686 /* data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17106C1B19D006770069C686 /* data.swift */; };
 		17106C1E19D015B40069C686 /* record_cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17106C1D19D015B40069C686 /* record_cell.swift */; };
+		17122F1619F787C800948974 /* BluetoothSendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17122F1519F787C800948974 /* BluetoothSendView.swift */; };
+		17122F1919F78CF600948974 /* Packer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17122F1719F78CF600948974 /* Packer.swift */; };
+		17122F1A19F78CF600948974 /* Unpacker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17122F1819F78CF600948974 /* Unpacker.swift */; };
+		17122F1C19F7AD3400948974 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17122F1B19F7AD3400948974 /* CoreBluetooth.framework */; };
 		171468B019CC33F3005873AB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171468AF19CC33F3005873AB /* AppDelegate.swift */; };
 		171468B219CC33F3005873AB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171468B119CC33F3005873AB /* ViewController.swift */; };
 		171468B519CC33F3005873AB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 171468B319CC33F3005873AB /* Main.storyboard */; };
@@ -30,6 +34,10 @@
 /* Begin PBXFileReference section */
 		17106C1B19D006770069C686 /* data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = data.swift; sourceTree = "<group>"; };
 		17106C1D19D015B40069C686 /* record_cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = record_cell.swift; sourceTree = "<group>"; };
+		17122F1519F787C800948974 /* BluetoothSendView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BluetoothSendView.swift; sourceTree = "<group>"; };
+		17122F1719F78CF600948974 /* Packer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Packer.swift; sourceTree = "<group>"; };
+		17122F1819F78CF600948974 /* Unpacker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Unpacker.swift; sourceTree = "<group>"; };
+		17122F1B19F7AD3400948974 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		171468AA19CC33F3005873AB /* VoiceLog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VoiceLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		171468AE19CC33F3005873AB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		171468AF19CC33F3005873AB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -57,8 +65,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				175AC30D19D182D6009F1187 /* libsqlite3.dylib in Frameworks */,
 				1717448919CFEEE100DC6E04 /* AVFoundation.framework in Frameworks */,
+				17122F1C19F7AD3400948974 /* CoreBluetooth.framework in Frameworks */,
+				175AC30D19D182D6009F1187 /* libsqlite3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,6 +77,8 @@
 		171468A119CC33F3005873AB = {
 			isa = PBXGroup;
 			children = (
+				1717448819CFEEE100DC6E04 /* AVFoundation.framework */,
+				17122F1B19F7AD3400948974 /* CoreBluetooth.framework */,
 				171468AC19CC33F3005873AB /* test_swift */,
 				171468AB19CC33F3005873AB /* Products */,
 			);
@@ -84,6 +95,8 @@
 		171468AC19CC33F3005873AB /* test_swift */ = {
 			isa = PBXGroup;
 			children = (
+				17122F1719F78CF600948974 /* Packer.swift */,
+				17122F1819F78CF600948974 /* Unpacker.swift */,
 				173B92A019E64F0500ED41F9 /* alert.caf */,
 				1727567B19D5187200C99D5A /* test_swift.entitlements */,
 				175AC30819D182B2009F1187 /* SQLiteDB.swift */,
@@ -103,6 +116,7 @@
 				1720C68D19E7B13600185957 /* AlertPlayView.swift */,
 				1752089119E8F55600F6E510 /* tools.swift */,
 				1757FA9619F64B4300797378 /* BluetoothRecvViewCtrl.swift */,
+				17122F1519F787C800948974 /* BluetoothSendView.swift */,
 			);
 			path = test_swift;
 			sourceTree = "<group>";
@@ -111,7 +125,6 @@
 			isa = PBXGroup;
 			children = (
 				175AC30C19D182D6009F1187 /* libsqlite3.dylib */,
-				1717448819CFEEE100DC6E04 /* AVFoundation.framework */,
 				171468AE19CC33F3005873AB /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -195,7 +208,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				1757FA9719F64B4300797378 /* BluetoothRecvViewCtrl.swift in Sources */,
+				17122F1919F78CF600948974 /* Packer.swift in Sources */,
+				17122F1619F787C800948974 /* BluetoothSendView.swift in Sources */,
 				172953B519E5436600E324B1 /* NotifyCell.swift in Sources */,
+				17122F1A19F78CF600948974 /* Unpacker.swift in Sources */,
 				171468B219CC33F3005873AB /* ViewController.swift in Sources */,
 				175AC30B19D182B2009F1187 /* String-Extras.swift in Sources */,
 				17106C1C19D006770069C686 /* data.swift in Sources */,

@@ -26,6 +26,7 @@ UIAlertViewDelegate{
     override func viewDidLoad() {
         super.viewDidLoad()
         let longPressRec=UILongPressGestureRecognizer(target: self, action: "mainListLongPress:")
+        longPressRec.minimumPressDuration=1.0
         mainlist.addGestureRecognizer(longPressRec)
         
         let docDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
@@ -337,8 +338,8 @@ UIAlertViewDelegate{
                 let alertctl=UIAlertController(title:nil, message: nil, preferredStyle: .ActionSheet)
                 alertctl.addAction(UIAlertAction(title: "Send by Bluetooth", style: UIAlertActionStyle.Default, handler: { (action:UIAlertAction!) -> Void in
                     let storyboard=UIStoryboard(name:"Main", bundle: nil)
-                    let control=storyboard.instantiateViewControllerWithIdentifier("BluetoothRecvViewCtrl").view as BluetoothRecvView
-                    control.Show()
+                    let control=storyboard.instantiateViewControllerWithIdentifier("BluetoothSendViewCtrl").view as BluetoothSendView
+                    control.Show(id!)
                     return
                 }))
                 alertctl.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler:nil))
@@ -346,5 +347,11 @@ UIAlertViewDelegate{
             }
         }
     }
+    @IBAction func btStartRecv(sender: AnyObject) {
+        let storyboard=UIStoryboard(name:"Main", bundle: nil)
+        let control=storyboard.instantiateViewControllerWithIdentifier("BluetoothRecvViewCtrl").view as BluetoothRecvView
+        control.Show()
+    }
+    
 }
 

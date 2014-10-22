@@ -15,7 +15,7 @@ class BluetoothRecvView:UIView {
     {
         let mainwindow=UIApplication.sharedApplication().keyWindow
         self.alpha=0
-        mainwindow.addSubview(self)
+        mainwindow?.addSubview(self)
         
         UIView.animateWithDuration(0.5, animations: { () -> Void in
             self.alpha=1

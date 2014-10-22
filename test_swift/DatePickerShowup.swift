@@ -41,7 +41,7 @@ class DatePickerShowup: UIView {
         let mainwindow=UIApplication.sharedApplication().keyWindow
         self.alpha=0
         self.OkCallBack=callback
-        mainwindow.addSubview(self)
+        mainwindow?.addSubview(self)
         self.date.minimumDate=NSDate()
         
         UIView.beginAnimations(nil, context: nil)

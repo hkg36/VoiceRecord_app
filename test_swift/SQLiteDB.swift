@@ -34,8 +34,11 @@ let SQLITE_DATE = SQLITE_NULL + 1
 		case SQLITE_TEXT:
 			return value as String
 		case SQLITE_BLOB:
-			let str = NSString(data:value as NSData, encoding:NSUTF8StringEncoding)
-			return str
+            if let str = NSString(data:value as NSData, encoding:NSUTF8StringEncoding){
+                return str
+            }else{
+                return ""
+            }
 		case SQLITE_NULL:
 			return ""
 		case SQLITE_DATE:
@@ -54,9 +57,6 @@ let SQLITE_DATE = SQLITE_NULL + 1
 		case SQLITE_TEXT:
 			let str = value as NSString
 			return str.integerValue
-		case SQLITE_BLOB:
-			let str = NSString(data:value as NSData, encoding:NSUTF8StringEncoding)
-			return str.integerValue
 		case SQLITE_NULL:
 			return 0
 		case SQLITE_DATE:
@@ -72,9 +72,6 @@ let SQLITE_DATE = SQLITE_NULL + 1
 			return value as Double
 		case SQLITE_TEXT:
 			let str = value as NSString
-			return str.doubleValue
-		case SQLITE_BLOB:
-			let str = NSString(data:value as NSData, encoding:NSUTF8StringEncoding)
 			return str.doubleValue
 		case SQLITE_NULL:
 			return 0.0
@@ -116,11 +113,6 @@ let SQLITE_DATE = SQLITE_NULL + 1
 			let fmt = NSDateFormatter()
 			fmt.dateFormat = "yyyy-MM-dd HH:mm:ss"
 			return fmt.dateFromString(value as String)
-		case SQLITE_BLOB:
-			let str = NSString(data:value as NSData, encoding:NSUTF8StringEncoding)
-			let fmt = NSDateFormatter()
-			fmt.dateFormat = "yyyy-MM-dd HH:mm:ss"
-			return fmt.dateFromString(str)
 		case SQLITE_NULL:
 			return nil
 		case SQLITE_DATE:
@@ -454,20 +446,21 @@ let SQLITE_DATE = SQLITE_NULL + 1
 			// Is this a text date
 			let txt = UnsafePointer<Int8>(sqlite3_column_text(stmt, index))
 			if txt != nil {
-				let buf = NSString(CString:txt, encoding:NSUTF8StringEncoding) as NSString
-				let set = NSCharacterSet(charactersInString: "-:")
-				let range = buf.rangeOfCharacterFromSet(set)
-				if range.location != NSNotFound {
-					// Convert to time
-					var time:tm = tm(tm_sec: 0, tm_min: 0, tm_hour: 0, tm_mday: 0, tm_mon: 0, tm_year: 0, tm_wday: 0, tm_yday: 0, tm_isdst: 0, tm_gmtoff: 0, tm_zone:nil)
-					strptime(txt, "%Y-%m-%d %H:%M:%S", &time)
-					time.tm_isdst = -1
-					let diff = NSTimeZone.localTimeZone().secondsFromGMT
-					let t = mktime(&time) + diff
-					let ti = NSTimeInterval(t)
-					let val = NSDate(timeIntervalSince1970:ti)
-					return val
-				}
+                if let buf = NSString(CString:txt, encoding:NSUTF8StringEncoding){
+                    let set = NSCharacterSet(charactersInString: "-:")
+                    let range = buf.rangeOfCharacterFromSet(set)
+                    if range.location != NSNotFound {
+                        // Convert to time
+                        var time:tm = tm(tm_sec: 0, tm_min: 0, tm_hour: 0, tm_mday: 0, tm_mon: 0, tm_year: 0, tm_wday: 0, tm_yday: 0, tm_isdst: 0, tm_gmtoff: 0, tm_zone:nil)
+                        strptime(txt, "%Y-%m-%d %H:%M:%S", &time)
+                        time.tm_isdst = -1
+                        let diff = NSTimeZone.localTimeZone().secondsFromGMT
+                        let t = mktime(&time) + diff
+                        let ti = NSTimeInterval(t)
+                        let val = NSDate(timeIntervalSince1970:ti)
+                        return val
+                    }
+                }
 			}
 			// If not a text date, then it's a time interval
 			let val = sqlite3_column_double(stmt, index)

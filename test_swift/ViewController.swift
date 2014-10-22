@@ -206,7 +206,7 @@ UIAlertViewDelegate{
                     let player=AVAudioPlayer(contentsOfURL: fileurl, error: nil)
                     if player.duration==0{
                         UIAlertView(title: "Fail", message: "File is broken,please record again", delegate: nil, cancelButtonTitle: "OK").show()
-                        NSFileManager.defaultManager().removeItemAtURL(fileurl, error: nil)
+                        NSFileManager.defaultManager().removeItemAtURL(fileurl!, error: nil)
                         return
                     }
                     self.goSaveItem?.duration=Float(player.duration)
@@ -220,7 +220,7 @@ UIAlertViewDelegate{
             alertctl.addAction(UIAlertAction(title: "Delete", style: UIAlertActionStyle.Cancel, handler:{ (UIAlertAction)in
                 self.savename=nil
                 let docDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
-            NSFileManager.defaultManager().removeItemAtURL(NSURL(string:docDir.stringByAppendingPathComponent(self.goSaveItem!.file!)), error: nil)
+            NSFileManager.defaultManager().removeItemAtURL(NSURL(string:docDir.stringByAppendingPathComponent(self.goSaveItem!.file!))!, error: nil)
             }))
             self.presentViewController(alertctl, animated: true, completion: {
             })
@@ -229,7 +229,7 @@ UIAlertViewDelegate{
         error: NSError!) {
             if let filename=self.goSaveItem?.file{
                 let docDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
-                NSFileManager.defaultManager().removeItemAtURL(NSURL(string:docDir.stringByAppendingPathComponent(filename)), error: nil)
+                NSFileManager.defaultManager().removeItemAtURL(NSURL(string:docDir.stringByAppendingPathComponent(filename))!, error: nil)
             }
             let alertctl=UIAlertController(title:"record error", message: error.localizedDescription, preferredStyle: .Alert)
             alertctl.addAction(UIAlertAction(title: "I known", style: UIAlertActionStyle.Default, handler:{ (UIAlertAction)in

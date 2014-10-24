@@ -46,6 +46,7 @@ class BluetoothRecvView:UIView ,CBCentralManagerDelegate, CBPeripheralDelegate{
         switch central.state {
         case .PoweredOn:
             self.message.text = "Searching Device ..."
+            self.manager?.scanForPeripheralsWithServices([GlobalStatic.serviceUUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey:true])
         case .PoweredOff:
             self.message.text="Bluetooth is powered off"
         case .Unauthorized:
@@ -98,7 +99,8 @@ class BluetoothRecvView:UIView ,CBCentralManagerDelegate, CBPeripheralDelegate{
         if service.UUID.isEqual(GlobalStatic.serviceUUID) {
             for characteristic in service.characteristics {
                 if characteristic.UUID == GlobalStatic.characteristicUUID {
-                    peripheral.setNotifyValue(true, forCharacteristic: characteristic as CBCharacteristic)
+                    //peripheral.setNotifyValue(true, forCharacteristic: characteristic as CBCharacteristic)
+                    peripheral.readValueForCharacteristic(characteristic as CBCharacteristic)
                 }
             }
         }
@@ -130,8 +132,15 @@ class BluetoothRecvView:UIView ,CBCentralManagerDelegate, CBPeripheralDelegate{
             return
         }
         let data=characteristic.value
-        let recvdata=Unpacker.unPackData(data) as? [String:Any]
-        println(recvdata?["title"])
+        let str=NSString(data: data, encoding: NSUTF8StringEncoding) as String
+        println("recvlen \(data.length) \(str)")
+        //let recvdata=Unpacker.unPackData(data) as? [String:Any]
+        //println(recvdata?["title"])
     }
-
+    
+    
+    func centralManager(central: CBCentralManager!, didDisconnectPeripheral peripheral: CBPeripheral!, error: NSError!) {
+        println("CenCentalManagerDelegate didDisconnectPeripheral")
+        self.manager?.scanForPeripheralsWithServices([GlobalStatic.serviceUUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey:true])
+    }
 }

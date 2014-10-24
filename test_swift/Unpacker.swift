@@ -89,9 +89,7 @@ public class Unpacker
             return (value:arrayValues.value, bytesRead:arrayValues.bytesRead+1)
         case 0xa0...0xbf:
             let length = UInt(byte & 0x1F)
-            
-            let str = String(bytes: bytes[0..<Int(length)], encoding: NSUTF8StringEncoding)
-            if let string = str
+            if let string = String(bytes:bytes[0..<Int(length)], encoding: NSUTF8StringEncoding)
             {
                 return (value:string, bytesRead:length+1)
             }
@@ -177,18 +175,36 @@ public class Unpacker
 
     class func parseInt(bytes:Slice<UInt8>, length:UInt)->Int
     {
-        var myInt:Int = 0
-        var intBytes = bytes[0..<Int(length)]
-        memcpy(&myInt, Array<UInt8>(bytes), length)
-        return myInt
+        var intBytes = [UInt8](bytes[0..<Int(length)])
+        switch length {
+        case 1:
+            return Int(Int8(intBytes[0]))
+        case 2:
+            return Int(Int16(bigEndian: UnsafePointer<Int16>(intBytes).memory))
+        case 4:
+            return Int(Int32(bigEndian:UnsafePointer<Int32>(intBytes).memory))
+        case 8:
+            return Int(Int64(bigEndian:UnsafePointer<Int64>(intBytes).memory))
+        default:
+            return 0
+        }
     }
 
     class func parseUInt(bytes:Slice<UInt8>, length:UInt)->UInt
     {
-        var uint:UInt = 0
-        var intBytes = bytes[0..<Int(length)]
-        memcpy(&uint, Array<UInt8>(intBytes), length)
-        return uint
+        var intBytes = [UInt8](bytes[0..<Int(length)])
+        switch length {
+        case 1:
+            return UInt(UInt8(intBytes[0]))
+        case 2:
+            return UInt(UInt16(bigEndian: UnsafePointer<UInt16>(intBytes).memory))
+        case 4:
+            return UInt(UInt32(bigEndian:UnsafePointer<UInt32>(intBytes).memory))
+        case 8:
+            return UInt(UInt64(bigEndian:UnsafePointer<UInt64>(intBytes).memory))
+        default:
+            return 0
+        }
     }
 
     class func parseFloat(bytes:Slice<UInt8>)->Float
@@ -196,6 +212,9 @@ public class Unpacker
         //reverse bytes first?
         var f:Float = 0.0
         var floatBytes = Array<UInt8>(bytes[0..<4])
+        if Packer.S.swip {
+            floatBytes=floatBytes.reverse()
+        }
         memcpy(&f, floatBytes, 4)
         return f
     }
@@ -205,15 +224,26 @@ public class Unpacker
         //reverse bytes first?
         var d:Double = 0.0
         var doubleBytes = Array<UInt8>(bytes[0..<8])
+        if Packer.S.swip {
+            doubleBytes=doubleBytes.reverse()
+        }
         memcpy(&d, doubleBytes, 8)
         return d
     }
 
     class func parseBin(bytes:Slice<UInt8>, length:UInt) ->Int
     {
-        var bin:Int = 0
-        memcpy(&bin, Array<UInt8>(bytes), length)
-        return bin
+        let buffer=[UInt8](bytes[0..<Int(length)])
+        switch length {
+        case 1:
+            return Int(buffer[0])
+        case 2:
+            return Int(UInt16(bigEndian: UnsafePointer<UInt16>(buffer).memory))
+        case 4:
+            return Int(UInt32(bigEndian:UnsafePointer<UInt32>(buffer).memory))
+        default:
+            return 0
+        }
     }
 
     class func parseMap(bytes:Slice<UInt8>, headerSize:UInt)->(value:Dictionary<String, Any>, bytesRead:UInt)
@@ -268,9 +298,7 @@ public class Unpacker
         var array = [Any]()
         for i in 0..<elements
         {
-            println(array)
             let results = parseBytes(bytes)
-            println(results)
             array.append(results.value)
             bytes = bytes[Int(results.bytesRead)..<bytes.count]
             bytesRead += results.bytesRead
@@ -282,13 +310,21 @@ public class Unpacker
     class func parseStr(bytes:Slice<UInt8>, headerSize:UInt)->(value:String, bytesRead:UInt)
     {
         var length:UInt = 0
-        var headerBytes = Array<UInt8>(bytes[0..<Int(headerSize)])
-        memcpy(&length, headerBytes, headerSize)
+        var headerBytes = [UInt8](bytes[0..<Int(headerSize)])
+        switch headerSize {
+        case 1:
+            length = UInt(headerBytes[0])
+        case 2:
+            length = UInt(UInt16(bigEndian: UnsafePointer<UInt16>(headerBytes).memory))
+        case 4:
+            length = UInt(UInt32(bigEndian:UnsafePointer<UInt32>(headerBytes).memory))
+        default:
+            return ("",0)
+        }
         
         if (headerSize+length < UInt(bytes.count))
         {
-            let str = String(bytes: bytes[Int(headerSize)..<Int(length+headerSize)], encoding: NSUTF8StringEncoding)
-            if let string = str
+            if let string = String(bytes:bytes[Int(headerSize)..<Int(length+headerSize)], encoding: NSUTF8StringEncoding)
             {
                 return (string, length+headerSize)
             }

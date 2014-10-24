@@ -11,6 +11,9 @@ import Foundation
 
 public class Packer
 {
+    struct S{
+        static let swip = UInt32(CFByteOrderGetCurrent()) == CFByteOrderLittleEndian.value
+    }
     //@todo research the most effiecant array type for this
     class func pack(thing:Any) -> [UInt8]
     {
@@ -311,29 +314,26 @@ public class Packer
         return localBytes
     }
 
-    class func lengthBytes(lengthIn:Int) -> Array<UInt8>
+    class func lengthBytes(lengthIn:Int) -> [UInt8]
     {
-        var length:CLongLong = CLongLong(lengthIn)
-        var lengthBytes:Array<UInt8> = Array<UInt8>()
-        
-        switch (length)
+        switch (CLongLong(lengthIn))
         {
         case 0..<0x100:
-            lengthBytes.append(UInt8(length))
-            
+            return [UInt8(lengthIn)]
         case 0x100..<0x10000:
-            lengthBytes = Array<UInt8>(count:2, repeatedValue:0)
-            memcpy(&lengthBytes, &length, 2)
-            
+            var v=UInt16(lengthIn).bigEndian
+            var lengthBytes = [UInt8](count:2, repeatedValue:0)
+            memcpy(&lengthBytes, &v, 2)
+            return lengthBytes
         case 0x10000..<0x100000000:
-            lengthBytes = Array<UInt8>(count:4, repeatedValue:0)
-            memcpy(&lengthBytes, &length, 4)
-            
+            var v=UInt32(lengthIn).bigEndian
+            var lengthBytes = [UInt8](count:4, repeatedValue:0)
+            memcpy(&lengthBytes, &v, 4)
+            return lengthBytes
         default:
             error("Unknown length")
+            return []
         }
-        
-        return lengthBytes
     }
 
     class func copyBytes<T>(value:T, length:Int, bytes:[UInt8]) -> [UInt8]
@@ -342,6 +342,9 @@ public class Packer
         var localBytes:Array<UInt8> = bytes
         var intBytes:Array<UInt8> = Array<UInt8>(count:length, repeatedValue:0)
         memcpy(&intBytes, &localValue, UInt(length))
+        if S.swip{
+            intBytes=intBytes.reverse()
+        }
         localBytes += intBytes
         
         return localBytes

@@ -9,8 +9,9 @@
 import UIKit
 import AVFoundation
 
+
 class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSource,AVAudioRecorderDelegate,AVAudioPlayerDelegate,
-UIAlertViewDelegate{
+UIAlertViewDelegate,BluetoothFileRecv{
 
     @IBOutlet weak var mainlist: UITableView!
     var recorder:AVAudioRecorder?
@@ -350,8 +351,11 @@ UIAlertViewDelegate{
     @IBAction func btStartRecv(sender: AnyObject) {
         let storyboard=UIStoryboard(name:"Main", bundle: nil)
         let control=storyboard.instantiateViewControllerWithIdentifier("BluetoothRecvViewCtrl").view as BluetoothRecvView
-        control.Show()
+        control.Show(callbk: self)
     }
-    
+    func newFileRecv(title:String,time:Double,content:[UInt8])
+    {
+        
+    }
 }
 

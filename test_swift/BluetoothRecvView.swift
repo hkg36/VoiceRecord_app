@@ -9,13 +9,20 @@
 import UIKit
 import CoreBluetooth
 
+protocol BluetoothFileRecv
+{
+    func newFileRecv(title:String,time:Double,content:[UInt8])
+}
+
 class BluetoothRecvView:UIView ,CBCentralManagerDelegate, CBPeripheralDelegate{
     @IBOutlet weak var title: UILabel!
     @IBOutlet weak var message: UILabel!
     var manager:CBCentralManager?
     var peripheral:CBPeripheral?
-    func Show()
+    var callback:BluetoothFileRecv?
+    func Show(callbk:BluetoothFileRecv?=nil)
     {
+        self.callback=callbk
         let mainwindow=UIApplication.sharedApplication().keyWindow
         self.alpha=0
         mainwindow?.addSubview(self)

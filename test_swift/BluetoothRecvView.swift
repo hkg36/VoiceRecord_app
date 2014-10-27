@@ -32,9 +32,11 @@ class BluetoothRecvView:UIView ,CBCentralManagerDelegate, CBPeripheralDelegate{
             self.alpha=1
             return
         })
+        UIApplication.sharedApplication().idleTimerDisabled = true
     }
     @IBAction func close(sender: AnyObject) {
-
+        self.manager?.stopScan()
+        UIApplication.sharedApplication().idleTimerDisabled = false
         UIView.animateWithDuration(0.5, animations: { () -> Void in
             self.alpha=0
             return
@@ -103,6 +105,7 @@ class BluetoothRecvView:UIView ,CBCentralManagerDelegate, CBPeripheralDelegate{
                 if characteristic.UUID == GlobalStatic.characteristicUUID {
                     //peripheral.setNotifyValue(true, forCharacteristic: characteristic as CBCharacteristic)
                     peripheral.readValueForCharacteristic(characteristic as CBCharacteristic)
+                    self.message.text = "start read file"
                 }
             }
         }
@@ -135,14 +138,19 @@ class BluetoothRecvView:UIView ,CBCentralManagerDelegate, CBPeripheralDelegate{
         }
         let data=characteristic.value
         if data.length > 0 {
-            self.databody.appendData(data)
-            println("read \(data.length) byte alllen \(self.databody.length)")
-            
             peripheral.readValueForCharacteristic(characteristic)
+            self.databody.appendData(data)
+            self.message.text = "read \(self.databody.length) bytes"
         }
         else {
             let recvdata=Unpacker.unPackData(self.databody) as? [String:Any]
-            println(recvdata?["title"])
+            let titletext=recvdata?["title"] as String
+            let timedouble=recvdata?["time"] as Double
+            let filedata = [UInt8](recvdata?["data"] as Slice<UInt8>)
+            if self.callback != nil {
+                self.callback?.newFileRecv(titletext, time: timedouble, content: filedata)
+            }
+            self.message.text = "voice \(titletext) received"
         }
     }
     

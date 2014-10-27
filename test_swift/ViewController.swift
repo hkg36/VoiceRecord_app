@@ -146,7 +146,10 @@ UIAlertViewDelegate,BluetoothFileRecv{
         var recordSettings = [
             AVFormatIDKey: kAudioFormatMPEG4AAC,
             AVNumberOfChannelsKey: 1,
-            AVSampleRateKey : 44100.0
+            AVSampleRateKey : 22050.0,
+            AVLinearPCMBitDepthKey : 16,
+            AVLinearPCMIsBigEndianKey : true,
+            AVLinearPCMIsFloatKey : true
         ]
         var error: NSError?
         let docDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
@@ -372,7 +375,21 @@ UIAlertViewDelegate,BluetoothFileRecv{
     }
     func newFileRecv(title:String,time:Double,content:[UInt8])
     {
-        
+        let date=NSDate(timeIntervalSince1970: NSTimeInterval(time))
+        let docDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
+        let fileShortName="audio/\(self.randfilename()).m4a"
+        let filedata=NSData(bytes: content, length: content.count)
+        let fileurl=NSURL(fileURLWithPath: docDir.stringByAppendingPathComponent(fileShortName))
+        if filedata.writeToURL(fileurl!, atomically: true) {
+            let player=AVAudioPlayer(contentsOfURL: fileurl, error: nil)
+            if player.duration != 0 {
+                let insertid=SQLiteDB.instanse.execute("insert into voice_log(title,file,time,duration) values(?,?,?,?)", parameters:[title,fileShortName,date,player.duration])
+                self.mainlist.beginUpdates()
+                self.items.insert(Int(insertid), atIndex: 0)
+                self.mainlist.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Automatic)
+                self.mainlist.endUpdates()
+            }
+        }
     }
 }
 

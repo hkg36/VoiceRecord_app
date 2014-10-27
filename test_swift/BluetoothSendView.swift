@@ -48,9 +48,11 @@ class BluetoothSendView:UIView ,CBPeripheralManagerDelegate{
                 self.alpha=1
                 return
             })
+            UIApplication.sharedApplication().idleTimerDisabled = true
         }
     }
     @IBAction func close(sender: AnyObject) {
+        UIApplication.sharedApplication().idleTimerDisabled = false
         if self.manage?.isAdvertising == true {
             self.manage?.stopAdvertising()
         }
@@ -123,6 +125,9 @@ class BluetoothSendView:UIView ,CBPeripheralManagerDelegate{
         
         if datatosend?.length == 0{
             self.session.removeValueForKey(request.central.identifier)
+            
+            self.sendCount++
+            self.message.text = "sending \(self.filetitle!)\n\(self.sendCount) copy send"
         }
     }
 }

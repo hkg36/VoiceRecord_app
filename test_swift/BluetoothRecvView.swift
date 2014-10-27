@@ -20,6 +20,7 @@ class BluetoothRecvView:UIView ,CBCentralManagerDelegate, CBPeripheralDelegate{
     var manager:CBCentralManager?
     var peripheral:CBPeripheral?
     var callback:BluetoothFileRecv?
+    var databody=NSMutableData()
     func Show(callbk:BluetoothFileRecv?=nil)
     {
         self.callback=callbk
@@ -71,6 +72,7 @@ class BluetoothRecvView:UIView ,CBCentralManagerDelegate, CBPeripheralDelegate{
     func centralManager(central: CBCentralManager!, didConnectPeripheral peripheral: CBPeripheral!){
         // Asks the peripheral to discover the service
         println("start discover service")
+        self.databody.length=0
         self.peripheral?.discoverServices([GlobalStatic.serviceUUID])
     }
     func centralManager(central: CBCentralManager!, didFailToConnectPeripheral peripheral: CBPeripheral!, error: NSError!)
@@ -132,10 +134,16 @@ class BluetoothRecvView:UIView ,CBCentralManagerDelegate, CBPeripheralDelegate{
             return
         }
         let data=characteristic.value
-        let str=NSString(data: data, encoding: NSUTF8StringEncoding) as String
-        println("recvlen \(data.length) \(str)")
-        //let recvdata=Unpacker.unPackData(data) as? [String:Any]
-        //println(recvdata?["title"])
+        if data.length > 0 {
+            self.databody.appendData(data)
+            println("read \(data.length) byte alllen \(self.databody.length)")
+            
+            peripheral.readValueForCharacteristic(characteristic)
+        }
+        else {
+            let recvdata=Unpacker.unPackData(self.databody) as? [String:Any]
+            println(recvdata?["title"])
+        }
     }
     
     

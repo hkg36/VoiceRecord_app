@@ -50,8 +50,6 @@ UIAlertViewDelegate,BluetoothFileRecv{
         self.processbar.continuous=true
         
         self.newNotify.enabled=false
-        
-        //AlertPlayView.Show(3)
     }
 
     override func didReceiveMemoryWarning() {
@@ -236,8 +234,7 @@ UIAlertViewDelegate,BluetoothFileRecv{
             alertctl.addAction(UIAlertAction(title: "I known", style: UIAlertActionStyle.Default, handler:{ (UIAlertAction)in
                 
             }))
-            self.presentViewController(alertctl, animated: true, completion: {
-            })
+            self.presentViewController(alertctl, animated: true, completion:nil)
     }
     func audioPlayerDidFinishPlaying(player: AVAudioPlayer!, successfully flag: Bool)
     {
@@ -341,6 +338,26 @@ UIAlertViewDelegate,BluetoothFileRecv{
                     let storyboard=UIStoryboard(name:"Main", bundle: nil)
                     let control=storyboard.instantiateViewControllerWithIdentifier("BluetoothSendViewCtrl").view as BluetoothSendView
                     control.Show(id!)
+                    return
+                }))
+                alertctl.addAction(UIAlertAction(title: "Alter Name", style: .Default, handler: { (action:UIAlertAction!) -> Void in
+                    let alertctl=UIAlertController(title:"chose name", message: nil, preferredStyle: .Alert)
+                    alertctl.addTextFieldWithConfigurationHandler { (textfield:UITextField!) -> Void in
+                        textfield.placeholder="leave blank for no change"
+                        self.savename=textfield
+                    }
+                    alertctl.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (action:UIAlertAction!) -> Void in
+                        let newname=self.savename!.text
+                        if  newname != "" {
+                            SQLiteDB.instanse.execute("update voice_log set title=?  where id=?", parameters: [newname,id!])
+                            self.mainlist.beginUpdates()
+                            self.mainlist.reloadRowsAtIndexPaths([posindexpath], withRowAnimation: UITableViewRowAnimation.Automatic)
+                            self.mainlist.endUpdates()
+                        }
+                        return
+                    }))
+                    alertctl.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler:nil))
+                    self.presentViewController(alertctl, animated: true, completion: nil)
                     return
                 }))
                 alertctl.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler:nil))

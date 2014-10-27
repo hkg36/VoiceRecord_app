@@ -18,7 +18,7 @@ class BluetoothSendView:UIView ,CBPeripheralManagerDelegate{
     var customCharacteristic:CBMutableCharacteristic?
     var customService:CBMutableService?
     var sendCount:Int=0
-    var session=[NSUUID:UInt]()
+    var session=[NSUUID:Int]()
     
     func Show(id:Int)
     {
@@ -96,7 +96,7 @@ class BluetoothSendView:UIView ,CBPeripheralManagerDelegate{
         if error == nil {
             println("start advert")
         }else{
-            println(error.description)
+            self.message.text = error.localizedDescription
         }
     }
     func peripheralManager(peripheral: CBPeripheralManager!, central: CBCentral!, didSubscribeToCharacteristic characteristic: CBCharacteristic!){
@@ -110,10 +110,19 @@ class BluetoothSendView:UIView ,CBPeripheralManagerDelegate{
     }
     func peripheralManager(peripheral: CBPeripheralManager!, didReceiveReadRequest request: CBATTRequest!)
     {
-        println("recvreq \(request.offset)")
-        if request.value == nil {
-            request.value="1_____________2_____________3_______________4_______________5__________________6_________________7_________________8_________________9_________________10_______________11________________12".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)
+        var offset=self.session[request.central.identifier]
+        if offset==nil {
+            offset=0
         }
+        let datatosend=self.data?.subdataWithRange(NSMakeRange(offset!, request.central.maximumUpdateValueLength))
+        offset! += datatosend!.length
+        self.session[request.central.identifier]=offset
+        
+        request.value=datatosend
         peripheral.respondToRequest(request, withResult: CBATTError.Success)
+        
+        if datatosend?.length == 0{
+            self.session.removeValueForKey(request.central.identifier)
+        }
     }
 }

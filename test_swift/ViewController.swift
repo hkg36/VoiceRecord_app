@@ -124,53 +124,68 @@ UIAlertViewDelegate,BluetoothFileRecv{
         return str
     }
     @IBAction func startRecord(sender: AnyObject) {
-        if self.recMark == nil {
-            self.recMark=UIImageView(image: UIImage(named:"microphone"))
-            self.recMark?.backgroundColor=UIColor(white: 0.3, alpha: 0.7)
-            self.recMark?.layer.cornerRadius=10
-            self.recMark?.layer.masksToBounds=true
-        }
-        if self.recMark != nil{
-            let baswindow=UIApplication.sharedApplication().delegate?.window
-            let windowsize=UIScreen.mainScreen().bounds.size
-            self.recMark?.frame=CGRect(x: (windowsize.width-170)/2,y: (windowsize.height-170)/2,width: 170,height: 170)
-            self.recMark?.alpha=0
-            baswindow??.addSubview(self.recMark!)
-            UIView.animateWithDuration(0.5,delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut , animations:{() -> Void in
-                self.recMark?.alpha=1.0
-                return
+        AVAudioSession.sharedInstance().requestRecordPermission({(granted: Bool)-> Void in
+            if granted {
+                AVAudioSession.sharedInstance().setActive(true, error: nil)
+                
+                if self.recMark == nil {
+                    self.recMark=UIImageView(image: UIImage(named:"microphone"))
+                    self.recMark?.backgroundColor=UIColor(white: 0.3, alpha: 0.7)
+                    self.recMark?.layer.cornerRadius=10
+                    self.recMark?.layer.masksToBounds=true
                 }
-                , completion: nil)
-        }
+                
+                var recordSettings = [
+                    AVFormatIDKey: kAudioFormatMPEG4AAC,
+                    AVNumberOfChannelsKey: 1,
+                    AVSampleRateKey : 22050.0,
+                    AVLinearPCMBitDepthKey : 16,
+                    AVLinearPCMIsBigEndianKey : true,
+                    AVLinearPCMIsFloatKey : true
+                ]
+                var error: NSError?
+                let docDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
+                let fileShortName="audio/\(self.randfilename()).m4a"
+                let soundFileURL = NSURL(string:docDir.stringByAppendingPathComponent(fileShortName))
+                self.recorder = AVAudioRecorder(URL: soundFileURL, settings: recordSettings, error: &error)
+                if let e = error {
+                    let alertctl=UIAlertController(title:"error", message: e.localizedDescription, preferredStyle: .Alert)
+                    alertctl.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel, handler: nil))
+                    self.presentViewController(alertctl, animated: true, completion: nil)
+                } else {
+                    if self.recMark != nil{
+                        let baswindow=UIApplication.sharedApplication().delegate?.window
+                        let windowsize=UIScreen.mainScreen().bounds.size
+                        self.recMark?.frame=CGRect(x: (windowsize.width-170)/2,y: (windowsize.height-170)/2,width: 170,height: 170)
+                        self.recMark?.alpha=0
+                        baswindow??.addSubview(self.recMark!)
+                        UIView.animateWithDuration(0.5,delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut , animations:{() -> Void in
+                            self.recMark?.alpha=1.0
+                            return
+                            }
+                            , completion: nil)
+                    }
+                    
+                    var newone=RecordInfo()
+                    newone.file=fileShortName
+                    newone.time=NSDate()
+                    self.goSaveItem=newone
+                    
+                    self.recorder?.delegate = self
+                    //self.recorder.meteringEnabled = true
+                    self.recorder?.prepareToRecord()
+                    self.recorder?.record()
+                }
+            }else{
+                let alertctl=UIAlertController(title:"error", message: "Permission to record not granted", preferredStyle: .Alert)
+                alertctl.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel, handler: nil))
+                self.presentViewController(alertctl, animated: true, completion: nil)
+            }
+        })
         
-        var recordSettings = [
-            AVFormatIDKey: kAudioFormatMPEG4AAC,
-            AVNumberOfChannelsKey: 1,
-            AVSampleRateKey : 22050.0,
-            AVLinearPCMBitDepthKey : 16,
-            AVLinearPCMIsBigEndianKey : true,
-            AVLinearPCMIsFloatKey : true
-        ]
-        var error: NSError?
-        let docDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
-        let fileShortName="audio/\(self.randfilename()).m4a"
-        let soundFileURL = NSURL(string:docDir.stringByAppendingPathComponent(fileShortName))
-        self.recorder = AVAudioRecorder(URL: soundFileURL, settings: recordSettings, error: &error)
-        if let e = error {
-            println(e.localizedDescription)
-        } else {
-            var newone=RecordInfo()
-            newone.file=fileShortName
-            newone.time=NSDate()
-            self.goSaveItem=newone
-            
-            self.recorder?.delegate = self
-            //self.recorder.meteringEnabled = true
-            self.recorder?.prepareToRecord()
-            self.recorder?.record()
-        }
+        
     }
-    @IBAction func stopRecord(sender: AnyObject) {
+    func HideRecordMark(){
         if self.recMark != nil{
             UIView.animateWithDuration(0.5,delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut , animations:{() -> Void in
                 self.recMark?.alpha = 0
@@ -182,13 +197,27 @@ UIAlertViewDelegate,BluetoothFileRecv{
                 }
             )
         }
+    }
+    @IBAction func stopRecord(sender: AnyObject) {
+        self.HideRecordMark()
         self.recorder?.stop()
     }
     func audioRecorderDidFinishRecording(recorder: AVAudioRecorder!,
         successfully flag: Bool) {
             println("finished recording \(flag)")
+            let docDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
+            if let filename=self.goSaveItem?.file{
+                let fileurl=NSURL(string:docDir.stringByAppendingPathComponent(filename))
+                let player=AVAudioPlayer(contentsOfURL: fileurl, error: nil)
+                if player.duration==0{
+                    UIAlertView(title: "Fail", message: "File is broken,please record again", delegate: nil, cancelButtonTitle: "OK").show()
+                    NSFileManager.defaultManager().removeItemAtURL(fileurl!, error: nil)
+                    return
+                }
+                self.goSaveItem?.duration=Float(player.duration)
+            }
             
-            let alertctl=UIAlertController(title:"chose name", message: nil, preferredStyle: .Alert)
+            let alertctl=UIAlertController(title:"Chose a Name", message: "Input A Name And Press Save to save the record.Leave it blank and just press Save for using default name(the time).Modify the name by long press the record in future.", preferredStyle: .Alert)
             alertctl.addTextFieldWithConfigurationHandler { (textfield:UITextField!) -> Void in
                 textfield.placeholder="default name is time"
                 self.savename=textfield
@@ -202,33 +231,24 @@ UIAlertViewDelegate,BluetoothFileRecv{
                 else{
                     self.goSaveItem?.title=self.timeformat.stringFromDate(self.goSaveItem!.time!)
                 }
-                let docDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
-                if let filename=self.goSaveItem?.file{
-                    let fileurl=NSURL(string:docDir.stringByAppendingPathComponent(filename))
-                    let player=AVAudioPlayer(contentsOfURL: fileurl, error: nil)
-                    if player.duration==0{
-                        UIAlertView(title: "Fail", message: "File is broken,please record again", delegate: nil, cancelButtonTitle: "OK").show()
-                        NSFileManager.defaultManager().removeItemAtURL(fileurl!, error: nil)
-                        return
-                    }
-                    self.goSaveItem?.duration=Float(player.duration)
-                }
+                
                 let insertid=SQLiteDB.instanse.execute("insert into voice_log(title,file,time,duration) values(?,?,?,?)", parameters:[self.goSaveItem!.title!,self.goSaveItem!.file!,self.goSaveItem!.time!,self.goSaveItem!.duration!])
                 self.mainlist.beginUpdates()
                 self.items.insert(Int(insertid), atIndex: 0)
                 self.mainlist.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Automatic)
                 self.mainlist.endUpdates()
             }))
-            alertctl.addAction(UIAlertAction(title: "Delete", style: UIAlertActionStyle.Cancel, handler:{ (UIAlertAction)in
+            alertctl.addAction(UIAlertAction(title: "Give Up", style: UIAlertActionStyle.Cancel, handler:{ (UIAlertAction)in
                 self.savename=nil
                 let docDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
-            NSFileManager.defaultManager().removeItemAtURL(NSURL(string:docDir.stringByAppendingPathComponent(self.goSaveItem!.file!))!, error: nil)
+                NSFileManager.defaultManager().removeItemAtURL(NSURL(string:docDir.stringByAppendingPathComponent(self.goSaveItem!.file!))!, error: nil)
             }))
             self.presentViewController(alertctl, animated: true, completion: {
             })
     }
     func audioRecorderEncodeErrorDidOccur(recorder: AVAudioRecorder!,
         error: NSError!) {
+            self.HideRecordMark()
             if let filename=self.goSaveItem?.file{
                 let docDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
                 NSFileManager.defaultManager().removeItemAtURL(NSURL(string:docDir.stringByAppendingPathComponent(filename))!, error: nil)
@@ -344,7 +364,7 @@ UIAlertViewDelegate,BluetoothFileRecv{
                     return
                 }))
                 alertctl.addAction(UIAlertAction(title: "Alter Name", style: .Default, handler: { (action:UIAlertAction!) -> Void in
-                    let alertctl=UIAlertController(title:"chose name", message: nil, preferredStyle: .Alert)
+                    let alertctl=UIAlertController(title:"Alter Name", message: "leave it blank or press Cancel for no action", preferredStyle: .Alert)
                     alertctl.addTextFieldWithConfigurationHandler { (textfield:UITextField!) -> Void in
                         textfield.placeholder="leave blank for no change"
                         self.savename=textfield

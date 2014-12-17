@@ -24,6 +24,9 @@
 		172953B319E542D100E324B1 /* NotifyListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172953B219E542D100E324B1 /* NotifyListViewController.swift */; };
 		172953B519E5436600E324B1 /* NotifyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172953B419E5436600E324B1 /* NotifyCell.swift */; };
 		173B92A119E64F0500ED41F9 /* alert.caf in Resources */ = {isa = PBXBuildFile; fileRef = 173B92A019E64F0500ED41F9 /* alert.caf */; };
+		174305361A0786BC001EAE7A /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 174305351A0786BC001EAE7A /* MobileCoreServices.framework */; };
+		174305381A0786F3001EAE7A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 174305371A0786F3001EAE7A /* SystemConfiguration.framework */; };
+		1743053A1A07870A001EAE7A /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 174305391A07870A001EAE7A /* libstdc++.dylib */; };
 		1752089219E8F55600F6E510 /* tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1752089119E8F55600F6E510 /* tools.swift */; };
 		1757FA9719F64B4300797378 /* BluetoothRecvView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1757FA9619F64B4300797378 /* BluetoothRecvView.swift */; };
 		175AC30A19D182B2009F1187 /* SQLiteDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175AC30819D182B2009F1187 /* SQLiteDB.swift */; };
@@ -52,6 +55,9 @@
 		172953B219E542D100E324B1 /* NotifyListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotifyListViewController.swift; sourceTree = "<group>"; };
 		172953B419E5436600E324B1 /* NotifyCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotifyCell.swift; sourceTree = "<group>"; };
 		173B92A019E64F0500ED41F9 /* alert.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = alert.caf; sourceTree = "<group>"; };
+		174305351A0786BC001EAE7A /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		174305371A0786F3001EAE7A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		174305391A07870A001EAE7A /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		1752089119E8F55600F6E510 /* tools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tools.swift; sourceTree = "<group>"; };
 		1757FA9619F64B4300797378 /* BluetoothRecvView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BluetoothRecvView.swift; sourceTree = "<group>"; };
 		175AC30719D182A6009F1187 /* Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
@@ -65,6 +71,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1743053A1A07870A001EAE7A /* libstdc++.dylib in Frameworks */,
+				174305381A0786F3001EAE7A /* SystemConfiguration.framework in Frameworks */,
+				174305361A0786BC001EAE7A /* MobileCoreServices.framework in Frameworks */,
 				1717448919CFEEE100DC6E04 /* AVFoundation.framework in Frameworks */,
 				17122F1C19F7AD3400948974 /* CoreBluetooth.framework in Frameworks */,
 				175AC30D19D182D6009F1187 /* libsqlite3.dylib in Frameworks */,
@@ -77,6 +86,9 @@
 		171468A119CC33F3005873AB = {
 			isa = PBXGroup;
 			children = (
+				174305391A07870A001EAE7A /* libstdc++.dylib */,
+				174305371A0786F3001EAE7A /* SystemConfiguration.framework */,
+				174305351A0786BC001EAE7A /* MobileCoreServices.framework */,
 				1717448819CFEEE100DC6E04 /* AVFoundation.framework */,
 				17122F1B19F7AD3400948974 /* CoreBluetooth.framework */,
 				171468AC19CC33F3005873AB /* test_swift */,
@@ -163,6 +175,9 @@
 						CreatedOnToolsVersion = 6.0.1;
 						DevelopmentTeam = 89RFBF2W4Q;
 						SystemCapabilities = {
+							com.apple.InterAppAudio = {
+								enabled = 0;
+							};
 							com.apple.iCloud = {
 								enabled = 0;
 							};
@@ -332,6 +347,10 @@
 				CODE_SIGN_ENTITLEMENTS = test_swift/test_swift.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/test_swift/AudioCopy2",
+				);
 				INFOPLIST_FILE = test_swift/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = VoiceLog;
@@ -349,6 +368,10 @@
 				CODE_SIGN_ENTITLEMENTS = test_swift/test_swift.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/test_swift/AudioCopy2",
+				);
 				INFOPLIST_FILE = test_swift/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = VoiceLog;
